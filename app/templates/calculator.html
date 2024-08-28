@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <script>
+        async function calculate(event) {
+            event.preventDefault(); // Prevents the default form submission
+
+            // Get form data
+            const formData = new FormData(event.target);
+            const a = formData.get('a');
+            const b = formData.get('b');
+            const operation = formData.get('operation');
+
+            // Send request to the server
+            const response = await fetch(`/calculate?a=${a}&b=${b}&operation=${operation}`);
+            const data = await response.json();
+
+            // Update result on the page
+            const resultDiv = document.getElementById('result');
+            if (typeof data.result === 'number') {
+                resultDiv.textContent = `Result: ${data.result}`;
+            } else {
+                resultDiv.textContent = data.result;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Calculator</h1>
+    <form onsubmit="calculate(event)">
+        <input type="number" name="a" placeholder="Number A" required>
+        <input type="number" name="b" placeholder="Number B" required>
+        <select name="operation" required>
+            <option value="add">Add</option>
+            <option value="subtract">Subtract</option>
+            <option value="multiply">Multiply</option>
+            <option value="divide">Divide</option>
+        </select>
+        <button type="submit">Calculate</button>
+    </form>
+    <div id="result"></div>
+</body>
+</html>
